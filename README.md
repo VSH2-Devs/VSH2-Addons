@@ -7,3 +7,5 @@ Current List of Official Addons.
 * **Transparent Weapons**: Allows players to turn their weapons transparent without having to disable viewmodels.
 * **Infinite Ammo Uber**: Ubering a player gives the uber patient infinite ammo (and clip for certain weapons) while they're ubered.
 * **Extra Boss Themes**: Adds extra boss themes for the default bosses.
+* **Gunshot Bride**: Plays the Gunshot Bride clip when an airshot by rocket or grenade launcher has been achieved.
+* **Difficulty Settings**: Let's players make their turn as boss even more challenging!
