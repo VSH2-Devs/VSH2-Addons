@@ -29,11 +29,6 @@ public void OnPluginStart() {
 		g_invis_setting[i] = 255;
 }
 
-public void OnClientPutInServer(int client)
-{
-	g_invis_setting[client] = 255;
-}
-
 public void OnLibraryAdded(const char[] name) {
 	if( StrEqual(name, "VSH2") ) {
 		g_vsh2 = true;
