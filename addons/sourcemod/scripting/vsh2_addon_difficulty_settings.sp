@@ -43,8 +43,11 @@ public void OnLibraryAdded(const char[] name) {
 
 public void LoadVSH2Hooks()
 {
-	if( !VSH2_HookEx(OnBossCalcHealth, DiffOnModHealth) )
-		LogError("Error Hooking OnBossCalcHealth forward for VSH2 Difficulty Settings addon.");
+	//if( !VSH2_HookEx(OnBossCalcHealth, DiffOnModHealth) )
+	//	LogError("Error Hooking OnBossCalcHealth forward for VSH2 Difficulty Settings addon.");
+	
+	if( !VSH2_HookEx(OnRoundStart, DiffOnRoundStart) )
+		LogError("Error Hooking OnRoundStart forward for VSH2 Difficulty Settings addon.");
 		
 	if( !VSH2_HookEx(OnBossThinkPost, DiffOnBossThinkPost) )
 		LogError("Error Hooking OnBossThinkPost forward for VSH2 Difficulty Settings addon.");
@@ -113,6 +116,21 @@ public void DiffOnModHealth(const VSH2Player player, int& max_health, const int 
 			max_health = RoundFloat( max_health * 0.75 );
 		case DIFF_FLAG_HALF_HP:
 			max_health = RoundFloat( max_health * 0.5 );
+	}
+}
+
+public void DiffOnRoundStart(const VSH2Player[] bosses, const int boss_count, const VSH2Player[] red_players, const int red_count)
+{
+	for( int i; i<boss_count; i++ ) {
+		int diff_flags = bosses[i].GetPropInt("iDifficulty");
+		switch( diff_flags & (DIFF_FLAG_25PC_LESS_HP|DIFF_FLAG_HALF_HP) ) {
+			case DIFF_FLAG_25PC_LESS_HP|DIFF_FLAG_HALF_HP:
+				bosses[i].SetPropInt("iMaxHealth", RoundFloat(bosses[i].GetPropInt("iMaxHealth") * 0.25));
+			case DIFF_FLAG_25PC_LESS_HP:
+				bosses[i].SetPropInt("iMaxHealth", RoundFloat(bosses[i].GetPropInt("iMaxHealth") * 0.75));
+			case DIFF_FLAG_HALF_HP:
+				bosses[i].SetPropInt("iMaxHealth", bosses[i].GetPropInt("iMaxHealth") / 2);
+		}
 	}
 }
 

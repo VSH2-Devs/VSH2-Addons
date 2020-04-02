@@ -13,6 +13,7 @@ public Plugin myinfo = {
 #include <vsh2>
 #define REQUIRE_PLUGIN
 
+
 bool g_vsh2;
 int g_invis_setting[35];
 
@@ -32,20 +33,25 @@ public void OnPluginStart() {
 public void OnLibraryAdded(const char[] name) {
 	if( StrEqual(name, "VSH2") ) {
 		g_vsh2 = true;
-		VSH2_Hook(OnRedPlayerThink, OnRedThink);
-		VSH2_Hook(OnBossThinkPost, OnRedThink);
+		VSH2_Hook(OnRedPlayerThink, OnPlayerThink);
+		VSH2_Hook(OnBossThinkPost, OnPlayerThink);
 	}
 }
 
 public void OnLibraryRemoved(const char[] name) {
 	if( StrEqual(name, "VSH2") ) {
 		g_vsh2 = false;
-		VSH2_Unhook(OnRedPlayerThink, OnRedThink);
-		VSH2_Unhook(OnBossThinkPost, OnRedThink);
+		VSH2_Unhook(OnRedPlayerThink, OnPlayerThink);
+		VSH2_Unhook(OnBossThinkPost, OnPlayerThink);
 	}
 }
 
-public void OnRedThink(const VSH2Player player) {
+public void OnClientPutInServer(int client)
+{
+	g_invis_setting[client] = 255;
+}
+
+public void OnPlayerThink(const VSH2Player player) {
 	player.SetWepInvis(g_invis_setting[player.index]);
 }
 

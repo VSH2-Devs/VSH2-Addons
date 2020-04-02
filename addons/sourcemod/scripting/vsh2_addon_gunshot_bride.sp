@@ -17,6 +17,7 @@ public Plugin myinfo = {
 	url = "sus"
 };
 
+ConVar g_reset_time;
 
 public void OnLibraryAdded(const char[] name) {
 	if( StrEqual(name, "VSH2") ) {
@@ -31,6 +32,8 @@ public void LoadVSH2Hooks()
 		
 	if( !VSH2_HookEx(OnBossAirShotProj, AirshotOnBossAirShotProj) )
 		LogError("Error Hooking OnBossAirShotProj forward for Airshot Gunshot Bride addon.");
+	
+	g_reset_time = CreateConVar("vsh2_gunshot_bride_reset_time", "80.0", "how long to reset the airshot sound play.", FCVAR_NOTIFY, true, 1.0, true, 9999.0);
 }
 
 public void AirshotDownloads()
@@ -57,11 +60,10 @@ public Action AirshotOnBossAirShotProj(VSH2Player victim, int& attacker, int& in
 	//	GetEdictClassname(weapon, wepname, sizeof(wepname));
 	
 	if( StrEqual(inflictor_name, "tf_projectile_rocket") || StrEqual(inflictor_name, "tf_projectile_pipe") ) {
-		VSH2Player pro = VSH2Player(attacker);
 		if( g_bPlayAirShotSong ) {
 			EmitSoundToAll("airshot.wav");
 			g_bPlayAirShotSong = false;
-			CreateTimer(80.0, TimerResetAirshot, _, TIMER_FLAG_NO_MAPCHANGE);
+			CreateTimer(g_reset_time.FloatValue, TimerResetAirshot, _, TIMER_FLAG_NO_MAPCHANGE);
 		}
 	}
 	return Plugin_Continue;
