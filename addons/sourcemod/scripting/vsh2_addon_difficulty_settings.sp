@@ -51,6 +51,11 @@ public void LoadVSH2Hooks()
 		
 	if( !VSH2_HookEx(OnBossThinkPost, DiffOnBossThinkPost) )
 		LogError("Error Hooking OnBossThinkPost forward for VSH2 Difficulty Settings addon.");
+		
+	if( !VSH2_HookEx(OnHelpMenu, DiffOnHelpMenu) )
+		LogError("Error Hooking OnHelpMenu forward for VSH2 Difficulty Settings addon.");
+	if( !VSH2_HookEx(OnHelpMenuSelect, DiffOnHelpMenuSelect) )
+		LogError("Error Hooking OnHelpMenuSelect forward for VSH2 Difficulty Settings addon.");
 }
 
 public Action SetDifficulty(int client, int args)
@@ -151,4 +156,17 @@ public void DiffOnBossThinkPost(VSH2Player player)
 	
 	if( diff_flags & DIFF_FLAG_NO_WGHDWN )
 		player.SetPropFloat("flWeighDown", 0.0);
+}
+
+public void DiffOnHelpMenu(const VSH2Player player, Menu menu)
+{
+	menu.AddItem("vsh2_difficulty", "Set Boss Difficulty Settings (/vsh2_difficulty)");
+}
+
+public void DiffOnHelpMenuSelect(const VSH2Player player, Menu menu, int selection)
+{
+	char info1[64]; menu.GetItem(selection, info1, sizeof(info1));
+	if( StrEqual(info1, "vsh2_difficulty") ) {
+		SetDifficulty(player.index, -1);
+	}
 }
