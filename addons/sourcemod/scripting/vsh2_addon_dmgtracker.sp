@@ -140,7 +140,7 @@ public void OnClientPutInServer(int client)
 
 public Action Timer_Millisecond(Handle timer)
 {
-	if( VSH2GameMode_GetPropInt("iRoundState") != StateRunning )
+	if( VSH2GameMode.GetPropInt("iRoundState") != StateRunning )
 		return Plugin_Continue;
 	
 	int i;
