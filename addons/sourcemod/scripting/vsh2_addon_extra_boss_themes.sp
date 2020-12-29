@@ -56,54 +56,60 @@ public void LoadVSH2Hooks()
 {
 	if( !VSH2_HookEx(OnCallDownloads, ExtraBossThemesDownloads) )
 		LogError("Error loading OnCallDownloads forwards for Extra Boss Themes Addon.");
-	
+
 	if( !VSH2_HookEx(OnMusic, OnExtraMusic) )
 		LogError("Error Hooking OnMusic forward for Extra Boss Themes Addon.");
 }
 
 public void ExtraBossThemesDownloads()
 {
-	DownloadSoundList(saxton_songs_str, sizeof(saxton_songs_str));
+	DownloadSoundList(saxton_songs_str,   sizeof(saxton_songs_str));
 	DownloadSoundList(vagineer_songs_str, sizeof(vagineer_songs_str));
-	DownloadSoundList(cbs_songs_str, sizeof(cbs_songs_str));
-	DownloadSoundList(hhh_songs_str, sizeof(hhh_songs_str));
-	DownloadSoundList(bunny_songs_str, sizeof(bunny_songs_str));
+	DownloadSoundList(cbs_songs_str,      sizeof(cbs_songs_str));
+	DownloadSoundList(hhh_songs_str,      sizeof(hhh_songs_str));
+	DownloadSoundList(bunny_songs_str,    sizeof(bunny_songs_str));
 }
 
 public void OnExtraMusic(char song[PLATFORM_MAX_PATH], float& time, const VSH2Player player)
 {
+	static int curr_index;
 	int bossid = player.GetPropInt("iBossType");
 	switch( bossid ) {
 		case VSH2Boss_Hale: {
-			int index = GetRandomInt(0, sizeof(saxton_songs_str)-1);
+			int index = ShuffleIndex(sizeof(saxton_songs_str), curr_index);
 			strcopy(song, sizeof(song), saxton_songs_str[index]);
 			time = saxton_songs_time[index];
+			curr_index = index;
 		}
 		case VSH2Boss_Vagineer: {
-			int index = GetRandomInt(0, sizeof(vagineer_songs_str)-1);
+			int index = ShuffleIndex(sizeof(vagineer_songs_str), curr_index);
 			strcopy(song, sizeof(song), vagineer_songs_str[index]);
 			time = vagineer_songs_time[index];
+			curr_index = index;
 		}
 		case VSH2Boss_CBS: {
 			if( GetRandomInt(0, 1) )
 				return;
-			
-			int index = GetRandomInt(0, sizeof(cbs_songs_str)-1);
+
+			int index = ShuffleIndex(sizeof(cbs_songs_str), curr_index);
 			strcopy(song, sizeof(song), cbs_songs_str[index]);
 			time = cbs_songs_time[index];
+			curr_index = index;
 		}
 		case VSH2Boss_HHHjr: {
 			if( GetRandomInt(0, 1) )
 				return;
-			
-			int index = GetRandomInt(0, sizeof(hhh_songs_str)-1);
+
+			int index = ShuffleIndex(sizeof(hhh_songs_str), curr_index);
 			strcopy(song, sizeof(song), hhh_songs_str[index]);
 			time = hhh_songs_time[index];
+			curr_index = index;
 		}
 		case VSH2Boss_Bunny: {
-			int index = GetRandomInt(0, sizeof(bunny_songs_str)-1);
+			int index = ShuffleIndex(sizeof(bunny_songs_str), curr_index);
 			strcopy(song, sizeof(song), bunny_songs_str[index]);
 			time = bunny_songs_time[index];
+			curr_index = index;
 		}
 	}
 }

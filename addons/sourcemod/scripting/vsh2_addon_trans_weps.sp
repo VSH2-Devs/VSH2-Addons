@@ -21,13 +21,13 @@ public void OnPluginStart() {
 	RegConsoleCmd("sm_inviswep", MakeWeapInvis);
 	RegConsoleCmd("sm_vsh2vm", MakeWeapInvis);
 	RegConsoleCmd("sm_pro", MakeWeapInvis);
-	
+
 	RegAdminCmd("sm_adpro", AdminMakeWeapInvis, ADMFLAG_GENERIC);
 	RegAdminCmd("sm_adinviswep", AdminMakeWeapInvis, ADMFLAG_GENERIC);
 	RegAdminCmd("sm_advsh2vm", AdminMakeWeapInvis, ADMFLAG_GENERIC);
-	
+
 	for( int i; i<sizeof(g_invis_setting); i++ )
-		g_invis_setting[i] = 255;
+		g_invis_setting[i] = 100;
 }
 
 public void OnLibraryAdded(const char[] name) {
@@ -48,7 +48,7 @@ public void OnLibraryRemoved(const char[] name) {
 
 public void OnClientPutInServer(int client)
 {
-	g_invis_setting[client] = 255;
+	g_invis_setting[client] = 100;
 }
 
 public void OnPlayerThink(const VSH2Player player) {
@@ -63,14 +63,14 @@ public Action MakeWeapInvis(int client, int args) {
 		CReplyToCommand(client, "{olive}[VSH 2]{default} You can only use this command ingame.");
 		return Plugin_Handled;
 	} else if( args < 1 ) {
-		CReplyToCommand(client, "{olive}[VSH 2]{default} Usage: /pro <0-255>");
+		CReplyToCommand(client, "{olive}[VSH 2]{default} Usage: /pro <0-100>");
 		return Plugin_Handled;
 	}
-	char number[8]; GetCmdArg(1, number, sizeof(number));
+	char number[5]; GetCmdArg(1, number, sizeof(number));
 	int maxalpha = StringToInt(number);
 	VSH2Player(client).SetWepInvis(maxalpha);
 	g_invis_setting[client] = maxalpha;
-	CPrintToChat(client, "{olive}[VSH 2]{default} your weapon transparency has been set to %i.", maxalpha);
+	CPrintToChat(client, "{olive}[VSH 2]{default} your weapon transparency has been set to %i%%.", maxalpha);
 	return Plugin_Handled;
 }
 
@@ -80,13 +80,13 @@ public Action AdminMakeWeapInvis(int client, int args)
 		CReplyToCommand(client, "{olive}[VSH 2]{default} VSH2 is not running!");
 		return Plugin_Handled;
 	} else if( args < 2 ) {
-		CReplyToCommand(client, "{olive}[VSH 2]{default} Usage: /adpro <target(s)> <0-255>");
+		CReplyToCommand(client, "{olive}[VSH 2]{default} Usage: /adpro <target(s)> <0-100>");
 		return Plugin_Handled;
 	}
 	char szTargetname[64]; GetCmdArg(1, szTargetname, sizeof(szTargetname));
 	char szNum[8]; GetCmdArg(2, szNum, sizeof(szNum));
 	int maxalpha = StringToInt(szNum);
-	
+
 	char target_name[MAX_TARGET_LENGTH];
 	int target_list[MAXPLAYERS+1], target_count;
 	bool tn_is_ml;
