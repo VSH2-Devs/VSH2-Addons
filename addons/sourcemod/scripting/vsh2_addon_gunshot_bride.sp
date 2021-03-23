@@ -27,6 +27,9 @@ public void OnLibraryAdded(const char[] name) {
 
 public void LoadVSH2Hooks()
 {
+	if( !VSH2_HookEx(OnCallDownloads, AirshotDownloads) )
+		LogError("Error loading OnCallDownloads forwards for Airshot Gunshot Bride Addon.");
+
 	if( !VSH2_HookEx(OnVariablesReset, AirshotRoundReset) )
 		LogError("Error Hooking OnVariablesReset forward for Airshot Gunshot Bride addon.");
 		
