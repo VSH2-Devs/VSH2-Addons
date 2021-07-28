@@ -6,18 +6,16 @@
 #include <tf2_stocks>
 #include <vsh2>
 
-
-bool g_bPlayAirShotSong;
-
 public Plugin myinfo = {
-	name = "VSH2 Airshot Gunshot Bride addon",
-	author = "Nergal/Assyrian",
+	name        = "VSH2 Airshot Gunshot Bride addon",
+	author      = "Nergal/Assyrian",
 	description = "",
-	version = "1.0",
-	url = "sus"
+	version     = "1.3",
+	url         = "https://github.com/VSH2-Devs/VSH2-Addons"
 };
 
 ConVar g_reset_time;
+bool   g_bPlayAirShotSong;
 
 public void OnLibraryAdded(const char[] name) {
 	if( StrEqual(name, "VSH2") ) {
@@ -25,11 +23,7 @@ public void OnLibraryAdded(const char[] name) {
 	}
 }
 
-public void LoadVSH2Hooks()
-{
-	if( !VSH2_HookEx(OnCallDownloads, AirshotDownloads) )
-		LogError("Error loading OnCallDownloads forwards for Airshot Gunshot Bride Addon.");
-
+public void LoadVSH2Hooks() {
 	if( !VSH2_HookEx(OnVariablesReset, AirshotRoundReset) )
 		LogError("Error Hooking OnVariablesReset forward for Airshot Gunshot Bride addon.");
 		
@@ -51,13 +45,14 @@ public void AirshotRoundReset(const VSH2Player player)
 
 public Action AirshotOnBossAirShotProj(VSH2Player victim, int& attacker, int& inflictor, float& damage, int& damagetype, int& weapon, float damageForce[3], float damagePosition[3], int damagecustom)
 {
-	if( victim.index==attacker )
+	if( victim.index==attacker ) {
 		return Plugin_Continue;
+	}
 	
-	char inflictor_name[32];
-	if( IsValidEntity(inflictor) )
+	char inflictor_name[64];
+	if( IsValidEntity(inflictor) ) {
 		GetEntityClassname(inflictor, inflictor_name, sizeof(inflictor_name));
-	
+	}
 	//char wepname[64];
 	//if( IsValidEntity(weapon) )
 	//	GetEdictClassname(weapon, wepname, sizeof(wepname));

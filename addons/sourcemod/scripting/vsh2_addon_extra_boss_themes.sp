@@ -39,11 +39,11 @@ float bunny_songs_time[] = { 221.0, 192.0 };
 
 
 public Plugin myinfo = {
-	name = "VSH2 Extra Boss Themes Addon",
-	author = "Nergal/Assyrian",
+	name        = "VSH2 Extra Boss Themes Addon",
+	author      = "Nergal/Assyrian",
 	description = "",
-	version = "1.0",
-	url = "sus"
+	version     = "1.3",
+	url         = "https://github.com/VSH2-Devs/VSH2-Addons"
 };
 
 public void OnLibraryAdded(const char[] name) {
@@ -52,11 +52,10 @@ public void OnLibraryAdded(const char[] name) {
 	}
 }
 
-public void LoadVSH2Hooks()
-{
+public void LoadVSH2Hooks() {
 	if( !VSH2_HookEx(OnCallDownloads, ExtraBossThemesDownloads) )
 		LogError("Error loading OnCallDownloads forwards for Extra Boss Themes Addon.");
-
+	
 	if( !VSH2_HookEx(OnMusic, OnExtraMusic) )
 		LogError("Error Hooking OnMusic forward for Extra Boss Themes Addon.");
 }

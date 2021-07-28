@@ -2,8 +2,8 @@ public Plugin myinfo = {
 	name         = "VSH2 Transparent Weapons",
 	author       = "Assyrian/Nergal",
 	description  = "Allows players to make their weapons transparent.",
-	version      = "1.0",
-	url          = "https://github.com/VSH2-Devs/Vs-Saxton-Hale-2"
+	version      = "1.3",
+	url          = "https://github.com/VSH2-Devs/VSH2-Addons"
 };
 
 #include <morecolors>
@@ -15,7 +15,7 @@ public Plugin myinfo = {
 
 
 bool g_vsh2;
-int g_invis_setting[35];
+int  g_invis_setting[35];
 
 public void OnPluginStart() {
 	RegConsoleCmd("sm_inviswep", MakeWeapInvis);
@@ -26,8 +26,9 @@ public void OnPluginStart() {
 	RegAdminCmd("sm_adinviswep", AdminMakeWeapInvis, ADMFLAG_GENERIC);
 	RegAdminCmd("sm_advsh2vm", AdminMakeWeapInvis, ADMFLAG_GENERIC);
 
-	for( int i; i<sizeof(g_invis_setting); i++ )
+	for( int i; i<sizeof(g_invis_setting); i++ ) {
 		g_invis_setting[i] = 100;
+	}
 }
 
 public void OnLibraryAdded(const char[] name) {
@@ -46,8 +47,7 @@ public void OnLibraryRemoved(const char[] name) {
 	}
 }
 
-public void OnClientPutInServer(int client)
-{
+public void OnClientPutInServer(int client) {
 	g_invis_setting[client] = 100;
 }
 
@@ -86,7 +86,7 @@ public Action AdminMakeWeapInvis(int client, int args)
 	char szTargetname[64]; GetCmdArg(1, szTargetname, sizeof(szTargetname));
 	char szNum[8]; GetCmdArg(2, szNum, sizeof(szNum));
 	int maxalpha = StringToInt(szNum);
-
+	
 	char target_name[MAX_TARGET_LENGTH];
 	int target_list[MAXPLAYERS+1], target_count;
 	bool tn_is_ml;

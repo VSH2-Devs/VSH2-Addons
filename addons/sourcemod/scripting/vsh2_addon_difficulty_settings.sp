@@ -18,20 +18,19 @@ enum /** difficulty flags */ {
 
 
 public Plugin myinfo = {
-	name = "VSH2 Difficulty Settings addon",
-	author = "Nergal/Assyrian",
+	name        = "VSH2 Difficulty Settings addon",
+	author      = "Nergal/Assyrian",
 	description = "",
-	version = "1.0",
-	url = "sus"
+	version     = "1.3",
+	url         = "https://github.com/VSH2-Devs/VSH2-Addons"
 };
 
-public void OnPluginStart()
-{
+public void OnPluginStart() {
 	RegConsoleCmd("sm_vsh2_difficulty", SetDifficulty);
-	RegConsoleCmd("sm_ff2_difficulty", SetDifficulty);
+	RegConsoleCmd("sm_ff2_difficulty",  SetDifficulty);
 	RegConsoleCmd("sm_boss_difficulty", SetDifficulty);
-	RegConsoleCmd("sm_setdifficulty", SetDifficulty);
-	RegConsoleCmd("sm_difficulty", SetDifficulty);
+	RegConsoleCmd("sm_setdifficulty",   SetDifficulty);
+	RegConsoleCmd("sm_difficulty",      SetDifficulty);
 }
 
 
@@ -41,8 +40,7 @@ public void OnLibraryAdded(const char[] name) {
 	}
 }
 
-public void LoadVSH2Hooks()
-{
+public void LoadVSH2Hooks() {
 	//if( !VSH2_HookEx(OnBossCalcHealth, DiffOnModHealth) )
 	//	LogError("Error Hooking OnBossCalcHealth forward for VSH2 Difficulty Settings addon.");
 	
@@ -54,12 +52,12 @@ public void LoadVSH2Hooks()
 		
 	if( !VSH2_HookEx(OnHelpMenu, DiffOnHelpMenu) )
 		LogError("Error Hooking OnHelpMenu forward for VSH2 Difficulty Settings addon.");
+		
 	if( !VSH2_HookEx(OnHelpMenuSelect, DiffOnHelpMenuSelect) )
 		LogError("Error Hooking OnHelpMenuSelect forward for VSH2 Difficulty Settings addon.");
 }
 
-public Action SetDifficulty(int client, int args)
-{
+public Action SetDifficulty(int client, int args) {
 	if( client <= 0 ) {
 		CReplyToCommand(client, "{olive}[VSH 2]{default} You can only use this command ingame.");
 		return Plugin_Handled;
@@ -98,8 +96,7 @@ public Action SetDifficulty(int client, int args)
 	return Plugin_Handled;
 }
 
-public int MenuHandler_DoDifficulties(Menu menu, MenuAction action, int client, int pick)
-{
+public int MenuHandler_DoDifficulties(Menu menu, MenuAction action, int client, int pick) {
 	char info[32]; menu.GetItem(pick, info, sizeof(info));
 	if( action == MenuAction_Select ) {
 		int difficulty_flag = StringToInt(info);
@@ -107,8 +104,9 @@ public int MenuHandler_DoDifficulties(Menu menu, MenuAction action, int client, 
 		int curr_difficulty = player.GetPropInt("iDifficulty");
 		player.SetPropInt("iDifficulty", curr_difficulty ^ difficulty_flag);
 		SetDifficulty(client, -1);
-	} else if( action == MenuAction_End )
+	} else if( action == MenuAction_End ) {
 		delete menu;
+	}
 }
 
 public void DiffOnModHealth(const VSH2Player player, int& max_health, const int boss_count, const int red_players)
@@ -139,32 +137,32 @@ public void DiffOnRoundStart(const VSH2Player[] bosses, const int boss_count, co
 	}
 }
 
-public void DiffOnBossThinkPost(VSH2Player player)
-{
+public void DiffOnBossThinkPost(VSH2Player player) {
 	int client = player.index;
-	if( !IsPlayerAlive(client) )
+	if( !IsPlayerAlive(client) ) {
 		return;
-	
-	int diff_flags = player.GetPropInt("iDifficulty");
-	if( diff_flags & DIFF_FLAG_NO_RAGE )
-		player.SetPropFloat("flRAGE", 0.0);
-	
-	if( diff_flags & DIFF_FLAG_DEGEN_HEALTH ) {
-		if( player.iHealth > 300 )
-			player.iHealth -= 1;
 	}
 	
-	if( diff_flags & DIFF_FLAG_NO_WGHDWN )
+	int diff_flags = player.GetPropInt("iDifficulty");
+	if( diff_flags & DIFF_FLAG_NO_RAGE ) {
+		player.SetPropFloat("flRAGE", 0.0);
+	}
+	if( diff_flags & DIFF_FLAG_DEGEN_HEALTH ) {
+		if( player.iHealth > 300 ) {
+			player.iHealth -= 1;
+		}
+	}
+	
+	if( diff_flags & DIFF_FLAG_NO_WGHDWN ) {
 		player.SetPropFloat("flWeighDown", 0.0);
+	}
 }
 
-public void DiffOnHelpMenu(const VSH2Player player, Menu menu)
-{
+public void DiffOnHelpMenu(const VSH2Player player, Menu menu) {
 	menu.AddItem("vsh2_difficulty", "Set Boss Difficulty Settings (/vsh2_difficulty)");
 }
 
-public void DiffOnHelpMenuSelect(const VSH2Player player, Menu menu, int selection)
-{
+public void DiffOnHelpMenuSelect(const VSH2Player player, Menu menu, int selection) {
 	char info1[64]; menu.GetItem(selection, info1, sizeof(info1));
 	if( StrEqual(info1, "vsh2_difficulty") ) {
 		SetDifficulty(player.index, -1);
