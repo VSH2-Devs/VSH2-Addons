@@ -83,7 +83,7 @@ public Action Command_damagetracker(int client, int args) {
 	if( StrEqual(arg1, "of", false) ) {
 		g_dmg[client].DmgSetting = 0;
 	}
-	
+
 	if( !StrEqual(arg1, "off", false) && !StrEqual(arg1, "on", false) && !StrEqual(arg1, "0", false) && !StrEqual(arg1, "of", false) ) {
 		newval = StringToInt(arg1);
 		char newsetting[3];
@@ -99,21 +99,29 @@ public Action Command_damagetracker(int client, int args) {
 		if( newval != 0 && g_dmg[client].DmgSetting > 0 ) {
 			newsetting = "on";
 		}
-		
-		CPrintToChat(client, "{olive}[VSH 2]{default} The damage tracker is now {lightgreen}%s{default}!", newsetting);
-		if( AreClientCookiesCached(client) ) {
-			char strval[6]; IntToString(g_dmg[client].DmgSetting, strval, sizeof(strval));
-			g_haledmg_cookie.Set(client, strval);
-		}
+
+		//CPrintToChat(client, "{olive}[VSH 2]{default} The damage tracker is now {lightgreen}%s{default}!", newsetting);
 	}
-	
+
+	if (g_dmg[client].DmgSetting > 0)	{
+		CPrintToChat(client, "{olive}[VSH 2]{default} The damage tracker is displaying the {lightgreen}top %i{default} players!", g_dmg[client].DmgSetting);
+	}
+	else	{
+		CPrintToChat(client, "{olive}[VSH 2]{default} The damage tracker is now {lightgreen}off {default}!", g_dmg[client].DmgSetting);
+	}
+
+	if( AreClientCookiesCached(client) ) {
+		char strval[6]; IntToString(g_dmg[client].DmgSetting, strval, sizeof(strval));
+		g_haledmg_cookie.Set(client, strval);
+	}
+
 	char r[4], g[4], b[4], a[4];
 	if(args >= 2) {
 		GetCmdArg(2, r, sizeof(r));
 		if(!StrEqual(r, "_"))
 			g_dmg[client].RGBA[RED] = StringToInt(r);
 	}
-	
+
 	if(args >= 3) {
 		GetCmdArg(3, g, sizeof(g));
 		if(!StrEqual(g, "_"))
@@ -139,7 +147,7 @@ public void OnClientPutInServer(int client)
 	g_dmg[client].RGBA[GREEN] = 90;
 	g_dmg[client].RGBA[BLUE] = 30;
 	g_dmg[client].RGBA[ALPHA] = 255;
-	
+
 	if( AreClientCookiesCached(client) ) {
 		char setting[2]; g_haledmg_cookie.Get(client, setting, sizeof(setting));
 		g_dmg[client].DmgSetting = StringToInt(setting);
@@ -150,14 +158,14 @@ public Action Timer_Millisecond(Handle timer)
 {
 	if( VSH2GameMode.GetPropInt("iRoundState") != StateRunning )
 		return Plugin_Continue;
-	
+
 	VSH2Player top_players[3];
 	VSH2Player(0).SetPropInt("iDamage", 0);
 	for( int i=MaxClients; i; --i ) {
 		if( !IsValidClient(i) || GetClientTeam(i) < VSH2Team_Red ) {
 			continue;
 		}
-		
+
 		VSH2Player player = VSH2Player(i);
 		if( player.GetPropInt("bIsBoss") || player.GetPropInt("iDamage")==0 ) {
 			continue;
@@ -172,7 +180,7 @@ public Action Timer_Millisecond(Handle timer)
 			top_players[2] = player;
 		}
 	}
-	
+
 	char names[3][64];
 	int damages[3];
 	for( int i; i<3; i++ ) {
@@ -184,10 +192,10 @@ public Action Timer_Millisecond(Handle timer)
 			names[i] = "nil";
 		}
 	}
-	
+
 	char damage_list[512];
 	Format(damage_list, sizeof(damage_list), "Most damage dealt by:\n1)%i - %s\n2)%i - %s\n3)%i - %s", damages[0], names[0], damages[1], names[1], damages[2], names[2]);
-	
+
 	for( int i=MaxClients; i; --i ) {
 		if( !IsValidClient(i) ) {
 			continue;
@@ -204,8 +212,8 @@ public Action Timer_Millisecond(Handle timer)
 }
 
 stock bool IsValidClient(const int client, bool nobots=false)
-{ 
+{
 	if (client <= 0 || client > MaxClients || !IsClientConnected(client) || (nobots && IsFakeClient(client)))
-		return false; 
-	return IsClientInGame(client); 
+		return false;
+	return IsClientInGame(client);
 }
