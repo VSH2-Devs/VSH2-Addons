@@ -15,7 +15,7 @@ public Plugin myinfo = {
 
 
 bool g_vsh2;
-int  g_invis_setting[35];
+int  g_invis_setting[MAXPLAYERS+1];
 
 public void OnPluginStart() {
 	RegConsoleCmd("sm_inviswep", MakeWeapInvis);
